@@ -1,5 +1,6 @@
 import '../index.css'
 import items from '../data/items.json'
+import { Link } from 'react-router-dom'
 
 export default function AllPromo({ search }) {
     let filteredProducts = items.filter((item) =>
@@ -16,13 +17,13 @@ export default function AllPromo({ search }) {
 
         <div className="flex-1 h-[2px] bg-primary border border-black"></div>
 
-        <a 
-            href="/" 
+        <Link 
+            to="/" 
             className="ml-auto text-sm font-semibold text-primary hover:underline" > 
             <span
             className='text-md'
             >Back</span>
-        </a>
+        </Link>
 
       </div>
 

@@ -1,5 +1,6 @@
 import '../index.css'
 import items from '../data/items.json'
+import { Link } from 'react-router-dom'
 
 export default function Menu({ search, limit }) {
   let filteredProducts = items.filter((item) =>
@@ -19,13 +20,13 @@ export default function Menu({ search, limit }) {
 
         <div className="flex-1 h-[2px] bg-primary border border-black"></div>
 
-        <a 
-            href="/Menus" 
+        <Link 
+            to="/Menus" 
             className="ml-auto text-sm font-semibold text-primary hover:underline" > 
             <span
             className='text-md'
             >View All</span>
-        </a>
+        </Link>
 
       </div>
 

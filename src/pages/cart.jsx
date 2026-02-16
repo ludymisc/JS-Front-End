@@ -1,6 +1,7 @@
 import "../index.css"
 import { useContext } from "react";
 import { CartContext } from "../components/cartContext";
+import { Link } from 'react-router-dom'
 
 
 export default function Cart() {
@@ -13,8 +14,21 @@ export default function Cart() {
     }, 0);
 
     return(
-    <div className="cart-page">
-      <h2>Your Cart</h2>
+    <div className="cart-page px-6 py-8">
+      <div className="flex items-center gap-4 mb-6 border border-black">
+
+      <h2 className="ext-2xl font-bold text-primary border border-black">Your Cart</h2>
+      <div className="flex-1 h-[2px] bg-primary border border-black"></div>
+
+        <Link 
+            to="/" 
+            className="ml-auto text-md font-semibold text-primary hover:underline" > 
+            <span
+            className='text-md'
+            >Back</span>
+        </Link>
+      </div>
+
 
       {cart.length === 0 ? (
         <p>Cart is empty</p>
