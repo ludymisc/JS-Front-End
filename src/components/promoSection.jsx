@@ -1,14 +1,21 @@
 import '../index.css'
 import items from '../data/items.json'
 import { Link } from 'react-router-dom'
+import { useState, useContext } from 'react'
+import QuantityModal from './quantityModal'
+import { CartContext } from './cartContext'
 
 export default function Promo({ search, limit }) {
-    let filteredProducts = items.filter((item) =>
-        item.isSale && item.name.toLowerCase().includes(search.toLowerCase())
-)
-    if (limit) {
-        filteredProducts = filteredProducts.slice(0, limit)
-    }
+  const [selectedItem, setSelectedItem] = useState(null);
+  const { handleAddToCart } = useContext(CartContext);
+  
+
+  let filteredProducts = items.filter((item) =>
+      item.isSale && item.name.toLowerCase().includes(search.toLowerCase()))
+
+  if (limit) {
+      filteredProducts = filteredProducts.slice(0, limit)
+  }
 
   return (
     <section className="px-6 py-8">
@@ -63,11 +70,17 @@ export default function Promo({ search, limit }) {
             )}
             </div>
 
-            <button className="w-full bg-primary text-white py-2 rounded-md hover:bg-primary/80">
+            <button 
+            className="w-full bg-primary text-white py-2 rounded-md hover:bg-primary/80"
+            onClick={() => setSelectedItem(item)}>
               Add to Cart
             </button>
           </div>
         ))}
+        <QuantityModal
+        item={selectedItem}
+        onClose={() => setSelectedItem(null)}
+        onConfirm={(item, qty) => handleAddToCart(item, qty)} />
       </div>
 
     </section>

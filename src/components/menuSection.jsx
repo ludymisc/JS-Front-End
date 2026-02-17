@@ -1,8 +1,18 @@
 import '../index.css'
 import items from '../data/items.json'
 import { Link } from 'react-router-dom'
+import { useState, useContext } from 'react'
+import QuantityModal from './quantityModal'
+import { CartContext } from './cartContext'
 
 export default function Menu({ search, limit }) {
+  const [selectedItem, setSelectedItem] = useState(null); 
+  //state item yang dipilih. 
+  //selectedItem = item yang lagi dipilih
+  //default/state awal = null (belum ada yang dipilih)
+  const { handleAddToCart } = useContext(CartContext);
+  //ini apaan jir
+  //Ambil function handleAddToCart dari global cart context.
   let filteredProducts = items.filter((item) =>
     item.name.toLowerCase().includes(search.toLowerCase())
   )
@@ -62,11 +72,17 @@ export default function Menu({ search, limit }) {
             )}
             </div>
 
-            <button className="w-full bg-primary text-white py-2 rounded-md hover:bg-primary/80">
+            <button 
+            className="w-full bg-primary text-white py-2 rounded-md hover:bg-primary/80"
+            onClick={() => setSelectedItem(item)}>
               Add to Cart
             </button>
           </div>
         ))}
+        <QuantityModal
+        item={selectedItem}
+        onClose={() => setSelectedItem(null)}
+        onConfirm={(item, qty) => handleAddToCart(item, qty)} />
       </div>
 
     </section>

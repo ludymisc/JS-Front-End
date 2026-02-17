@@ -106,20 +106,20 @@ export default function AllMenu({ search }) { //fungsi AllMenu dengan props sear
 
             {/* Close Button */}
             <button
-              className="absolute top-2 right-2 text-gray-500"
+              className="absolute top-2 right-2 text-gray-500 border border-black"
               onClick={() => setSelectedItem(null)}
             >
-              ✕
+              ❌
             </button>
 
-            <h3 className="text-lg font-bold mb-4">
+            <h3 className="text-lg font-bold mb-4 border border-black">
               {selectedItem.name}
             </h3>
 
             {/* Quantity Control */}
-            <div className="flex items-center gap-2 mb-4">
+            <div className="flex items-center gap-2 mb-4 border border-black">
               <button
-                className="px-3 py-1 border"
+                className="px-3 py-1 border border border-black"
                 onClick={() => setQuantity(prev => Math.max(1, prev - 1))}
               >
                 -
@@ -129,12 +129,12 @@ export default function AllMenu({ search }) { //fungsi AllMenu dengan props sear
                 type="number"
                 value={quantity}
                 min="1"
-                className="w-16 text-center border"
+                className="w-16 text-center border border border-black"
                 onChange={(e) => setQuantity(Number(e.target.value))}
               />
 
               <button
-                className="px-3 py-1 border"
+                className="px-3 py-1 border border border-black"
                 onClick={() => setQuantity(prev => prev + 1)}
               >
                 +
@@ -142,7 +142,7 @@ export default function AllMenu({ search }) { //fungsi AllMenu dengan props sear
             </div>
 
             <button
-              className="w-full bg-primary text-white py-2 rounded-md"
+              className="w-full bg-primary text-white py-2 rounded-md border border-black"
               onClick={() => {
                 handleAddToCart(selectedItem, quantity);
                 setSelectedItem(null);
