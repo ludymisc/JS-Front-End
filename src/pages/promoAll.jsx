@@ -18,7 +18,17 @@ export default function AllPromo({ search }) {
     //Ambil function handleAddToCart dari global cart context.
     let filteredProducts = items.filter((item) =>
             item.isSale && item.name.toLowerCase().includes(search.toLowerCase()))
-    
+        /**
+     * Memfilter daftar produk berdasarkan dua kondisi:
+     * 1. Hanya menampilkan produk yang sedang diskon (isSale === true).
+     * 2. Nama produk mengandung keyword pencarian (search), 
+     *    tanpa memperhatikan huruf besar/kecil (case insensitive).
+     *
+     * @param {Array<Object>} items - Array berisi daftar produk.
+     * @param {string} search - Keyword pencarian yang diinput user.
+     * @returns {Array<Object>} Array produk yang memenuhi kriteria filter.
+     */
+
     return(
     <section className="px-6 py-8">
 
@@ -42,9 +52,10 @@ export default function AllPromo({ search }) {
 
       {/* Produk */}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-2 border border-black">
-        {filteredProducts.map((item) => (
+        {filteredProducts.map((item) => ( //data item yang sudah di filter kemudian di loop dan di tampilkan
           <div
             key={item.id}
+
             className="bg-white shadow rounded-lg p-4 border w-full"
           >
             <img
@@ -74,16 +85,18 @@ export default function AllPromo({ search }) {
 
             <button 
             className="w-full bg-primary text-white py-2 rounded-md hover:bg-primary/80"
-            onClick={() => setSelectedItem(item)}
+            onClick={() => setSelectedItem(item)} //saat di click, state selectedItem menjadi data item yang di klik
             >
               Add to Cart
             </button>
           </div>
         ))}
+      {/* ini blok pop up quantity kontrol */}
       <QuantityModal
-      item={selectedItem}
-      onClose={() => setSelectedItem(null)}
-      onConfirm={(item, qty) => handleAddToCart(item, qty)} />
+      item={selectedItem} //data item adalah item pada state selectedItem
+      onClose={() => setSelectedItem(null)} //kalo di close, balikin nilai state selectedItem ke null
+      onConfirm={(item, qty) => handleAddToCart(item, qty)} /> 
+      {/* tambahkan item ke cart, isinya data item dan quantity */}
       </div>
 
     </section>

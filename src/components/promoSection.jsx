@@ -13,9 +13,11 @@ export default function Promo({ search, limit }) {
   let filteredProducts = items.filter((item) =>
       item.isSale && item.name.toLowerCase().includes(search.toLowerCase()))
 
-  if (limit) {
-      filteredProducts = filteredProducts.slice(0, limit)
-  }
+  // if (limit) {
+  //     filteredProducts = filteredProducts.slice(0, limit)
+  // }
+
+  {limit && (filteredProducts = filteredProducts.slice(0, limit))} //it is the same as if statement
 
   return (
     <section className="px-6 py-8">
