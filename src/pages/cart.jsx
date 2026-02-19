@@ -3,17 +3,22 @@ import { useContext, useState } from "react";
 import { CartContext } from "../components/cartContext";
 import { Link } from 'react-router-dom'
 import ConfirmModal from "../components/deleteModal";
+import QuantityModal from "../components/quantityModal";
+import EditModal from "../components/editModal";
 
 
 export default function Cart() {
     //const [isEditing, setIsEditing] = useState(false)
-    const { cart, removeFromCart } = useContext(CartContext);
+    const { cart, removeFromCart, updateCartItem } = useContext(CartContext);
     // Mengambil data cart dan fungsi removeFromCart dari CartContext
     // useContext digunakan untuk mengakses state dan function global
     // yang disediakan oleh CartContext
 
+    const [modalType, setModalType] = useState(null)
+    // null | "edit" | "delete"
+
     // State untuk mengontrol apakah modal / dropdown terbuka
-    const [ isOpen, setIsOpen ] = useState(false)
+
     // State untuk menyimpan ID item yang sedang dipilih
     const [ isSelectedId, setIsSelectedId ] = useState(null)
     
@@ -55,12 +60,18 @@ export default function Cart() {
               </p>
               </div>
               <div className="flex flex-rows">
-              <button className="bg-gray-400 p-2 mr-1 rounded-lg flex">edit</button>
+              <button 
+              className="bg-gray-400 p-2 mr-1 rounded-lg flex"
+              onClick={() => {
+                setModalType("edit")
+                setIsSelectedId(item.id)
+              }}>
+                edit</button>
               <button 
               className="bg-primary p-2 ml-1 rounded-lg flex"
               onClick={() => { //kalo di klik, selectedId akan terisi id item yang di klik
               setIsSelectedId(item.id) //dan modal akan terbuka
-              setIsOpen(true)}}>
+              setModalType("delete")}}>
                 delete
               </button>
               </div>
@@ -72,19 +83,34 @@ export default function Cart() {
           </h3>
         </>
       )}
-      <ConfirmModal 
-      item={cart.find(i => i.id === isSelectedId)} //nyari item id dari array cart yang sama dengan selectedItem
-      isOpen={isOpen} //state harus true agar modal muncul
-      onConfirm={() => { //onConfirm ada di file confirm model, cek aja. 
-        removeFromCart(isSelectedId) //kalo di klik, remove from cart berjalan, dan state di tutup, selected item di nuke
-        setIsOpen(false)
-        setIsSelectedId(null)
-      }}
-      onCancel={() => { //kalo di klik, cuma nutup modal dan nuke selectedId
-        setIsOpen(false)
-        setIsSelectedId(null)
-      }}
-    />
+      {modalType === "delete" && (
+  <ConfirmModal
+    item={cart.find(i => i.id === isSelectedId)}
+    onConfirm={() => {
+      removeFromCart(isSelectedId)
+      setModalType(null)
+      setIsSelectedId(null)
+    }}
+    onCancel={() => {
+      setModalType(null)
+      setIsSelectedId(null)
+    }}
+  />
+)}
+   {modalType === "edit" && (
+  <EditModal
+    item={cart.find(i => i.id === isSelectedId)}
+    onClose={() => {
+      setModalType(null)
+      setIsSelectedId(null)
+    }}
+    onConfirm={(item, qty) => {
+      updateCartItem(item.id, qty)
+      setModalType(null)
+      setIsSelectedId(null)
+    }}
+  />
+)}
     </div>
   );
     

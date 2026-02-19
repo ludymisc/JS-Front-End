@@ -25,8 +25,18 @@ export function CartProvider({ children }) {
     setCart(prevCart => prevCart.filter(item => item.id !== id))
   }
 
+  const updateCartItem = (id, newQty) => {
+  setCart(prevCart =>
+    prevCart.map(item =>
+      item.id === id
+        ? { ...item, quantity: newQty }
+        : item
+    )
+  );
+};
+
   return (
-    <CartContext.Provider value={{ cart, handleAddToCart, removeFromCart }}>
+    <CartContext.Provider value={{ cart, handleAddToCart, removeFromCart, updateCartItem }}>
       {children}
     </CartContext.Provider>
   );

@@ -1,5 +1,5 @@
-export default function ConfirmModal({ isOpen, onConfirm, onCancel, item }) {
-  if (!isOpen || !item) return null;
+export default function ConfirmModal({ onConfirm, onCancel, item }) {
+  if (!item) return null;
 
   return (
     <div className="modal-overlay fixed inset-0 bg-black/40 flex items-center justify-center z-50 ">
