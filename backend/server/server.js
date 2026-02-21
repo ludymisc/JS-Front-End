@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 import express from "express";
 import productRoutes from '../controller/controller.products.js'
 
-dotenv.config({ path: '../.env' })
+dotenv.config({ path: '../../.env' })
  
 const app = express();
 
