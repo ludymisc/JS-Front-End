@@ -1,9 +1,24 @@
 // import pool from "../db/supabase.js";
 import { Router } from "express";
 import sql from '../db/supabase.js'
-
+import multer from 'multer'
+import supabase from '../db/storage.js'
 
 const router = Router();
+const upload = multer()
+
+router.post('/upload', upload.single('file'), async (req, res) => {
+  const file = req.file
+
+  const { data, error } = await supabase.storage
+    .from('producta')
+    .upload(`public/${file.originalname}`, file.buffer)
+
+  if (error) return res.status(500).json(error)
+
+  res.json({ success: true })
+})
+
 router.post('/add-product', async (req, res) => {
     
     try{

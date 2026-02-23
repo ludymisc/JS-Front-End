@@ -6,6 +6,7 @@ import { useState } from "react"
 import AllMenu from "./pages/menuAll"
 import AllPromo from "./pages/promoAll"
 import Cart from "./pages/cart"
+import UploadTest from "../backend/controller/uploadfrom"
 
 export default function App() {
     const [search, setSearch] = useState("")
@@ -25,7 +26,7 @@ export default function App() {
          <Route path="/Menus" element={<AllMenu search={search}/>} />
          <Route path="/itemsOnPromo" element={<AllPromo search={search}/>} />
          <Route path="/cart" element={<Cart />} />
-         
+         <Route path="/upload" element={<UploadTest/>} />
       </Routes>
     </>
   )
