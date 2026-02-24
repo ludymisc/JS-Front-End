@@ -7,35 +7,39 @@ import supabase from '../db/storage.js'
 const router = Router();
 const upload = multer()
 
-router.post('/upload', upload.single('file'), async (req, res) => {
-  const file = req.file
+router.post('/add-product', upload.single('file'), async (req, res) => {
+  try {
+    const file = req.file
+    const { name, price } = req.body
 
-  const { data, error } = await supabase.storage
-    .from('producta')
-    .upload(`public/${file.originalname}`, file.buffer)
+    if (!file) {
+      return res.status(400).json({ message: "File is required" })
+    }
 
-  if (error) return res.status(500).json(error)
+    const uploadResult = await supabase.storage
+      .from('producta')
+      .upload(`public/${crypto.randomUUID()}`, file.buffer)
 
-  res.json({ success: true })
-})
+    if (uploadResult.error) {
+      return res.status(500).json(uploadResult.error)
+    }
 
-router.post('/add-product', async (req, res) => {
-    
-    try{
-        const {name, price} = req.body
+    const { publicUrl } = supabase.storage
+      .from('producta')
+      .getPublicUrl(uploadResult.data.path).data
 
-        const result = await sql`
-      INSERT INTO products (name, price)
-      VALUES (${name}, ${price})
+    const result = await sql`
+      INSERT INTO products (name, price, image_url)
+      VALUES (${name}, ${price}, ${publicUrl})
       RETURNING *
     `
-        
 
-        res.status(200).json({ message: "done", data: result })
-    } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: "cek log" })
-    }
+    res.status(200).json({ message: "done", data: result })
+
+  } catch (error) {
+    console.error(error)
+    res.status(500).json({ message: "cek log" })
+  }
 })
 
 export default router

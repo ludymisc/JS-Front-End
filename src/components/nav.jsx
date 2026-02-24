@@ -2,12 +2,14 @@ import "../index.css"
 import { FaCartShopping } from "react-icons/fa6";
 import { Link } from "react-router-dom";
 
-export default function Navbar ({search, setSearch}) {
+export default function Navbar ({search, setSearch, setIsOpen}) {
    
     return(
         <div className="bg-primary flex border border-black">
             <div className="w-1/4 m-2 border border-black">
-                ini logo
+            <button onClick={() => setIsOpen(true)}>
+                button iseng buat test upload
+            </button>
             </div>
             <div className="w-2/4 m-2 flex justify-center border border-black">
                 <form className="w-full">

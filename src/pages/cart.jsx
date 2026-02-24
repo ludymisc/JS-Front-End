@@ -17,8 +17,6 @@ export default function Cart() {
     const [modalType, setModalType] = useState(null)
     // null | "edit" | "delete"
 
-    // State untuk mengontrol apakah modal / dropdown terbuka
-
     // State untuk menyimpan ID item yang sedang dipilih
     const [ isSelectedId, setIsSelectedId ] = useState(null)
     

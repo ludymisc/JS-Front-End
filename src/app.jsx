@@ -7,12 +7,20 @@ import AllMenu from "./pages/menuAll"
 import AllPromo from "./pages/promoAll"
 import Cart from "./pages/cart"
 import UploadTest from "../backend/controller/uploadfrom"
+import UploadModal from "./components/uploadModal"
 
 export default function App() {
     const [search, setSearch] = useState("")
+    const [isOpen, setIsOpen] = useState(false)
   return (
     <>
-      <Navbar search={search} setSearch={setSearch} />
+    <>
+      <Navbar 
+      search={search} 
+      setSearch={setSearch}
+      setIsOpen={setIsOpen} />
+      {isOpen && <UploadModal setIsOpen={setIsOpen}/>}
+    </>
       <Routes>
         <Route 
           path="/" 

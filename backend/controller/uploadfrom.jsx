@@ -1,8 +1,8 @@
 import { createClient } from '@supabase/supabase-js'
 
 const supabase = createClient(
-  process.env.EXPO_PUBLIC_SUPABASE_URL,
-  process.env.EXPO_PUBLIC_SUPABASE_KEY
+  import.meta.env.VITE_SUPABASE_URL,
+  import.meta.env.VITE_SUPABASE_PUBLISHABLE_DEFAULT_KEY
 )
 
 export default function UploadTest() {
@@ -14,7 +14,7 @@ export default function UploadTest() {
     console.log("Uploading:", file.name)
 
     const { data, error } = await supabase.storage
-      .from('products') // pastikan bucket namanya benar
+      .from('producta') // pastikan bucket namanya benar
       .upload(`public/${crypto.randomUUID()}`, file)
 
     if (error) {
