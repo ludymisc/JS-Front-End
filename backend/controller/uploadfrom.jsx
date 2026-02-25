@@ -1,3 +1,7 @@
+{/*
+  file ini sudah digantikan oleh uploadModal, boleh dihapus filenya, juga sekalian routenya di app.jsx
+  */}
+
 import { createClient } from '@supabase/supabase-js'
 
 const supabase = createClient(
