@@ -4,14 +4,22 @@ export default function UploadModal({ setIsOpen }) {
   const [name, setName] = useState("")
   const [price, setPrice] = useState("")
   const [file, setFile] = useState(null)
+  const [isDiskon, setIsDiskon] = useState(false)
+  const [hargaDiskon, setHargaDiskon] = useState("")
 
   const handleSubmit = async (e) => {
     e.preventDefault()
+    
+    if (isDiskon && !hargaDiskon) {
+    alert("Harga diskon wajib diisi")
+    return}
 
     const formData = new FormData()
     formData.append("name", name)
     formData.append("price", price)
     formData.append("file", file)
+    formData.append("is_diskon", isDiskon)
+    formData.append("harga_diskon", hargaDiskon)
 
     const res = await fetch("http://localhost:3000/api/add-product", {
       method: "POST",
@@ -21,8 +29,6 @@ export default function UploadModal({ setIsOpen }) {
     const result = await res.json()
     console.log(result)
 
-    const text = await res.text()
-    console.log(text)
 
     if (res.ok) {
         setIsOpen(false)
@@ -56,6 +62,34 @@ export default function UploadModal({ setIsOpen }) {
           type="file"
           onChange={(e) => setFile(e.target.files[0])}
         />
+
+        <br />
+
+        <label>
+          <input
+            type="checkbox"
+            checked={isDiskon}
+            onChange={(e) => {
+            setIsDiskon(e.target.checked)
+            if (!e.target.checked) {
+              setHargaDiskon("")
+            }
+          }}
+          />
+          Diskon?
+        </label>
+
+        <br />
+
+        {isDiskon && (
+          <input
+            type="number"
+            value={hargaDiskon}
+            placeholder="harga after diskon"
+            onChange={(e) => setHargaDiskon(e.target.value)}
+            required
+          />
+        )}
 
         <br />
 

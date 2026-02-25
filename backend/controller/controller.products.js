@@ -53,11 +53,15 @@ const upload = multer()
 router.post('/add-product', upload.single('file'), async (req, res) => {
   try {
     const file = req.file
-    const { name, price } = req.body
+    const { name, price, is_diskon, harga_diskon } = req.body
 
     if (!file) {
       return res.status(400).json({ message: "File is required" })
     }
+
+    const parsedPrice = Number(price)
+    const isDiskonBool = is_diskon === "true"
+    const parsedHargaDiskon = isDiskonBool ? Number(harga_diskon) : null
 
     const uploadResult = await supabase.storage
       .from('producta')
@@ -71,9 +75,13 @@ router.post('/add-product', upload.single('file'), async (req, res) => {
       .from('producta')
       .getPublicUrl(uploadResult.data.path).data
 
+    if (isDiskonBool && !harga_diskon) {
+      return res.status(400).json({ message: "Harga diskon wajib diisi" })
+    }
+
     const result = await sql`
-      INSERT INTO products (name, price, image_url)
-      VALUES (${name}, ${price}, ${publicUrl})
+      INSERT INTO items (nama, harga_normal, image_url, is_diskon, harga_diskon, updated_at, created_at)
+      VALUES (${name}, ${parsedPrice}, ${publicUrl}, ${isDiskonBool}, ${parsedHargaDiskon}, NOW(), NOW())
       RETURNING *
     `
 
