@@ -46,9 +46,41 @@ import { Router } from "express";
 import sql from '../db/supabase.js'
 import multer from 'multer'
 import supabase from '../db/storage.js'
+import bcrypt from 'bcrypt'
 
 const router = Router();
 const upload = multer()
+
+router.post('/login', async(req, res) => {
+  try{
+    const { username, password } = req.body;
+    if (!username || !password) {
+      res.status(400).json({ message: "semua field wajib diisi" })
+    }
+
+    const result = await sql 
+    `SELECT id, username, password_hash
+    FROM admins WHERE username=${username}`
+    
+
+    if (result.length === 0) {
+      return res.status(400).json({ message: "user tidak dapat ditemukan" })
+    }
+
+    const admin = result[0]
+    const isPasswordTrue = await bcrypt.compare(password, admin.password_hash)
+
+    if (!isPasswordTrue) {
+      return res.status(400).json({ message: "password tidak cocok" })
+    } 
+    
+    res.status(200).json({ 
+      message: "admin datank",
+      admin: true })
+  } catch (error) {
+    res.status(500).json({ message: "server error" })
+  }
+})
 
 router.post('/add-product', upload.single('file'), async (req, res) => {
   try {

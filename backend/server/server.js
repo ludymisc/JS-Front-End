@@ -1,6 +1,6 @@
 import dotenv from "dotenv";
 import express from "express";
-import productRoutes from '../controller/controller.products.js'
+import productRoutes from '../controller/auth.controller.js'
 import cors from 'cors'
 
 dotenv.config({ path: '../../.env' })

@@ -8,6 +8,8 @@ import AllPromo from "./pages/promoAll"
 import Cart from "./pages/cart"
 import UploadTest from "../backend/controller/uploadfrom"
 import UploadModal from "./components/uploadModal"
+import ProtectedRoute from "./components/adminChecker"
+import AdminPanel from "./pages/adminPanel"
 
 export default function App() {
     const [search, setSearch] = useState("")
@@ -35,6 +37,14 @@ export default function App() {
          <Route path="/itemsOnPromo" element={<AllPromo search={search}/>} />
          <Route path="/cart" element={<Cart />} />
          <Route path="/upload" element={<UploadTest/>} />
+         <Route 
+          path="/admin" 
+          element={
+            <ProtectedRoute>
+              <AdminPanel />
+            </ProtectedRoute>
+          }
+        />
       </Routes>
     </>
   )
