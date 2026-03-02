@@ -6,7 +6,7 @@ import { // Import hooks React:
   useContext, // - useContext untuk mengakses state global dari Context
   useState } // - useState untuk mengelola state lokal
   from "react"; 
-
+import QuantityModal from '../components/quantityModal';
 import { CartContext } from '../components/cartContext'; //ngambil fungsi cartContext
 import { Link } from 'react-router-dom' //mirip anchor, tapi gak refresh page (preventDefault)
 
@@ -100,61 +100,11 @@ export default function AllMenu({ search }) { //fungsi AllMenu dengan props sear
             </button>
           </div>
         ))}
-        {selectedItem && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg w-80 relative">
-
-            {/* Close Button */}
-            <button
-              className="absolute top-2 right-2 text-gray-500 border border-black"
-              onClick={() => setSelectedItem(null)}
-            >
-              ❌
-            </button>
-
-            <h3 className="text-lg font-bold mb-4 border border-black">
-              {selectedItem.name}
-            </h3>
-
-            {/* Quantity Control */}
-            <div className="flex items-center gap-2 mb-4 border border-black">
-              <button
-                className="px-3 py-1 border border border-black"
-                onClick={() => setQuantity(prev => Math.max(1, prev - 1))}
-              >
-                -
-              </button>
-
-              <input
-                type="number"
-                value={quantity}
-                min="1"
-                className="w-16 text-center border border border-black"
-                onChange={(e) => setQuantity(Number(e.target.value))}
-              />
-
-              <button
-                className="px-3 py-1 border border border-black"
-                onClick={() => setQuantity(prev => prev + 1)}
-              >
-                +
-              </button>
-            </div>
-
-            <button
-              className="w-full bg-primary text-white py-2 rounded-md border border-black"
-              onClick={() => {
-                handleAddToCart(selectedItem, quantity);
-                setSelectedItem(null);
-                alert("Berhasil ditambahkan ke cart!");
-              }}
-            >
-              Confirm
-            </button>
-
-          </div>
-        </div>
-      )}
+      <QuantityModal
+        item={selectedItem}
+        onClose={() => setSelectedItem(null)}
+        onConfirm={(item, qty) => handleAddToCart(item, qty)}
+      />
       </div>
     </section>
     )
