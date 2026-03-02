@@ -1,15 +1,18 @@
 import '../index.css' 
 //Import file CSS global supaya styling (warna, font, dll) bisa dipake di component ini
-import items from '../data/items.json' 
-// Import data dummy dari file JSON (sementara belum pakai database)
 import { // Import hooks React:
-  useContext, // - useContext untuk mengakses state global dari Context
+  useContext, useEffect, // - useContext untuk mengakses state global dari Context
   useState } // - useState untuk mengelola state lokal
   from "react"; 
 import QuantityModal from '../components/quantityModal';
 import { CartContext } from '../components/cartContext'; //ngambil fungsi cartContext
 import { Link } from 'react-router-dom' //mirip anchor, tapi gak refresh page (preventDefault)
+import { createClient } from '@supabase/supabase-js';
 
+const supabase = createClient(
+  import.meta.env.VITE_SUPABASE_URL,
+  import.meta.env.VITE_SUPABASE_ANON_KEY
+)
 
 export default function AllMenu({ search }) { //fungsi AllMenu dengan props search untuk fungsionalitas search bar dari navbar
     const [quantity, setQuantity] = useState(1); 
@@ -20,12 +23,28 @@ export default function AllMenu({ search }) { //fungsi AllMenu dengan props sear
     //state item yang dipilih. 
     //selectedItem = item yang lagi dipilih
     //default/state awal = null (belum ada yang dipilih)
+    const [items, setItems] = useState([])
+
+    useEffect(() => {
+      fetchProduct()
+    }, [])
+
+    async function fetchProduct() {
+      const { data, error } = await supabase
+      .from("items")
+      .select("*")
+
+      if(error) {
+        console.error(error)
+      }
+      setItems(data)
+    }
 
     const { handleAddToCart } = useContext(CartContext);
     //ini apaan jir
     //Ambil function handleAddToCart dari global cart context.
-    let filteredProducts = items.filter((item) =>
-            item.name.toLowerCase().includes(search.toLowerCase()))
+    const filteredProducts = items.filter((item) =>
+            item.nama.toLowerCase().includes(search.toLowerCase()))
     // Loop semua item 
     // Ambil item yang namanya mengandung keyword search
     // Case insensitive (pakai toLowerCase)
@@ -63,29 +82,25 @@ export default function AllMenu({ search }) { //fungsi AllMenu dengan props sear
             className="bg-white shadow rounded-lg p-4 border w-full"
           >
             <img
-              src={item.image}
-              alt={item.name}
+              src={item.image_url}
+              alt={item.nama}
               className="w-full h-40 object-cover rounded-md mb-4"
             />
 
             <h3 className="text-lg font-semibold mb-1">
-              {item.name}
+              {item.nama}
             </h3>
-
-            <p className="text-gray-500 mb-2">
-              {item.category}
-            </p>
 
             <div className="flex items-center gap-2 mb-2">
             {item.isSale ? ( //kondisional value data
             //kalo isSale true, maka akan begini di card
                 <> 
-                <p className="text-gray-500 line-through">Rp. {item.price.toLocaleString()}</p>
-                <p className="text-red-600 font-boldi">Rp. {item.newPrice.toLocaleString()}</p>
+                <p className="text-gray-500 line-through">Rp. {item.harga_normal.toLocaleString()}</p>
+                <p className="text-red-600 font-boldi">Rp. {item.haarga_diskon.toLocaleString()}</p>
                 </>
             ) : (
               //kalo false, begini
-                <p className="text-black font-bold">Rp.{item.price.toLocaleString()}</p>
+                <p className="text-black font-bold">Rp.{item.harga_normal.toLocaleString()}</p>
             )}
             </div>
 
