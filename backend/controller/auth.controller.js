@@ -90,14 +90,18 @@ router.post('/add-product', upload.single('file'), async (req, res) => {
     if (!file) {
       return res.status(400).json({ message: "File is required" })
     }
+    const fileExt = file.originalname.split('.').pop()
+    const fileName = `${crypto.randomUUID()}.${fileExt}`
 
     const parsedPrice = Number(price)
     const isDiskonBool = is_diskon === "true"
     const parsedHargaDiskon = isDiskonBool ? Number(harga_diskon) : null
 
     const uploadResult = await supabase.storage
-      .from('producta')
-      .upload(`public/${crypto.randomUUID()}`, file.buffer)
+    .from('producta')
+    .upload(fileName, file.buffer, {
+      contentType: file.mimetype
+    })
 
     if (uploadResult.error) {
       return res.status(500).json(uploadResult.error)

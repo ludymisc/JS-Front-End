@@ -1,7 +1,7 @@
 import Navbar from "./components/nav"
 import Promo from "./components/promoSection"
 import Menu from "./components/menuSection"
-import { Route, Routes } from "react-router-dom"
+import { Route, Routes, useLocation } from "react-router-dom"
 import { useState } from "react"
 import AllMenu from "./pages/menuAll"
 import AllPromo from "./pages/promoAll"
@@ -10,19 +10,26 @@ import UploadTest from "../backend/controller/uploadfrom"
 import UploadModal from "./components/uploadModal"
 import ProtectedRoute from "./components/adminChecker"
 import AdminPanel from "./pages/adminPanel"
+import LoginPage from "./pages/loginAdmin"
 
 export default function App() {
     const [search, setSearch] = useState("")
     const [isOpen, setIsOpen] = useState(false)
+    const location = useLocation()
+
+    const hideNavbar = location.pathname === "/login"
   return (
     <>
-    <>
-      <Navbar 
-      search={search} 
-      setSearch={setSearch}
-      setIsOpen={setIsOpen} />
-      {isOpen && <UploadModal setIsOpen={setIsOpen}/>}
-    </>
+      {!hideNavbar && (
+        <>
+          <Navbar 
+            search={search} 
+            setSearch={setSearch}
+            setIsOpen={setIsOpen} 
+          />
+          {isOpen && <UploadModal setIsOpen={setIsOpen}/>}
+        </>
+      )}
       <Routes>
         <Route 
           path="/" 
@@ -45,6 +52,7 @@ export default function App() {
             </ProtectedRoute>
           }
         />
+        <Route path='/login' element={<LoginPage/>} />
       </Routes>
     </>
   )

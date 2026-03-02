@@ -25,7 +25,7 @@ import App from './app.jsx'
 
 // Import a context provider that exposes cart state and actions app-wide
 import { CartProvider } from './components/cartContext.jsx'
-import { AuthProvider } from '../backend/controller/auth.context.jsx'
+import { AuthProvider } from './components/auth.context.jsx'
 
 // Find the DOM element with id 'root' and mount the React application there.
 // `createRoot(...).render(...)` is the recommended mounting API in React 18+.
