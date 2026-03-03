@@ -92,11 +92,11 @@ export default function AllMenu({ search }) { //fungsi AllMenu dengan props sear
             </h3>
 
             <div className="flex items-center gap-2 mb-2">
-            {item.isSale ? ( //kondisional value data
+            {item.is_diskon ? ( //kondisional value data
             //kalo isSale true, maka akan begini di card
                 <> 
                 <p className="text-gray-500 line-through">Rp. {item.harga_normal.toLocaleString()}</p>
-                <p className="text-red-600 font-boldi">Rp. {item.haarga_diskon.toLocaleString()}</p>
+                <p className="text-red-600 font-boldi">Rp. {item.harga_diskon.toLocaleString()}</p>
                 </>
             ) : (
               //kalo false, begini

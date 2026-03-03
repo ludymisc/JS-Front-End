@@ -1,17 +1,38 @@
 import '../index.css'
 import items from '../data/items.json'
 import { Link } from 'react-router-dom'
-import { useState, useContext } from 'react'
+import { useState, useContext, useEffect } from 'react'
 import QuantityModal from './quantityModal'
 import { CartContext } from './cartContext'
+import { createClient } from '@supabase/supabase-js'
+
+const supabase = createClient(
+  import.meta.env.VITE_SUPABASE_URL,
+  import.meta.env.VITE_SUPABASE_ANON_KEY
+)
 
 export default function Promo({ search, limit }) {
   const [selectedItem, setSelectedItem] = useState(null);
+  const [items, setItems] = useState([])
   const { handleAddToCart } = useContext(CartContext);
-  
 
+  useEffect(() => {
+    fetchProduct()
+  }, [])
+
+  async function fetchProduct() {
+    const { data, error } = await supabase
+    .from("items")
+    .select("*")
+
+    if(error) {
+      console.error(error)
+    }
+    setItems(data)
+  }
+  
   let filteredProducts = items.filter((item) =>
-      item.isSale && item.name.toLowerCase().includes(search.toLowerCase()))
+      item.is_diskon && item.nama.toLowerCase().includes(search.toLowerCase()))
 
   // if (limit) {
   //     filteredProducts = filteredProducts.slice(0, limit)
@@ -48,27 +69,23 @@ export default function Promo({ search, limit }) {
             className="bg-white shadow rounded-lg p-4 border w-full"
           >
             <img
-              src={item.image}
-              alt={item.name}
+              src={item.image_url}
+              alt={item.nama}
               className="w-full h-40 object-cover rounded-md mb-4"
             />
 
             <h3 className="text-lg font-semibold mb-1">
-              {item.name}
+              {item.nama}
             </h3>
 
-            <p className="text-gray-500 mb-2">
-              {item.category}
-            </p>
-
             <div className="flex items-center gap-2 mb-2">
-            {item.isSale ? (
+            {item.is_diskon ? (
                 <>
-                <p className="text-gray-500 line-through">Rp. {item.price.toLocaleString()}</p>
-                <p className="text-red-600 font-boldi">Rp. {item.newPrice.toLocaleString()}</p>
+                <p className="text-gray-500 line-through">Rp. {item.harga_normal.toLocaleString()}</p>
+                <p className="text-red-600 font-boldi">Rp. {item.harga_diskon.toLocaleString()}</p>
                 </>
             ) : (
-                <p className="text-black font-bold">Rp.{item.price.toLocaleString()}</p>
+                <p className="text-black font-bold">Rp.{item.harga_normal.toLocaleString()}</p>
             )}
             </div>
 

@@ -5,19 +5,27 @@ import QuantityModal from '../components/quantityModal'
 import { CartContext } from '../components/cartContext'
 import { 
   useContext, 
+  useEffect, 
   useState } 
   from 'react'
+import { createClient } from '@supabase/supabase-js'
+
+const supabase = createClient(
+  import.meta.env.VITE_SUPABASE_URL,
+  import.meta.env.VITE_SUPABASE_ANON_KEY
+)
 
 export default function AllPromo({ search }) {
     const [selectedItem, setSelectedItem] = useState(null); 
     //state item yang dipilih. 
     //selectedItem = item yang lagi dipilih
     //default/state awal = null (belum ada yang dipilih)
+    const [items, setItems] = useState([])
     const { handleAddToCart } = useContext(CartContext);
     //ini apaan jir
     //Ambil function handleAddToCart dari global cart context.
     let filteredProducts = items.filter((item) =>
-            item.isSale && item.name.toLowerCase().includes(search.toLowerCase()))
+            item.is_diskon && item.nama.toLowerCase().includes(search.toLowerCase()))
         /**
      * Memfilter daftar produk berdasarkan dua kondisi:
      * 1. Hanya menampilkan produk yang sedang diskon (isSale === true).
@@ -28,6 +36,19 @@ export default function AllPromo({ search }) {
      * @param {string} search - Keyword pencarian yang diinput user.
      * @returns {Array<Object>} Array produk yang memenuhi kriteria filter.
      */
+
+    useEffect(() => {
+      fetchProduct()
+    }, [])
+
+    async function fetchProduct() {
+      const { data, error } = await supabase
+      .from("items")
+      .select("*")
+
+      {error && (console.error(error))}
+      setItems(data)
+    }
 
     return(
     <section className="px-6 py-8">
@@ -59,27 +80,25 @@ export default function AllPromo({ search }) {
             className="bg-white shadow rounded-lg p-4 border w-full"
           >
             <img
-              src={item.image}
-              alt={item.name}
+              src={item.image_url}
+              alt={item.nama}
               className="w-full h-40 object-cover rounded-md mb-4"
             />
 
             <h3 className="text-lg font-semibold mb-1">
-              {item.name}
+              {item.nama}
             </h3>
 
-            <p className="text-gray-500 mb-2">
-              {item.category}
-            </p>
-
             <div className="flex items-center gap-2 mb-2">
-            {item.isSale ? (
-                <>
-                <p className="text-gray-500 line-through">Rp. {item.price.toLocaleString()}</p>
-                <p className="text-red-600 font-boldi">Rp. {item.newPrice.toLocaleString()}</p>
+            {item.is_diskon ? ( //kondisional value data
+            //kalo isSale true, maka akan begini di card
+                <> 
+                <p className="text-gray-500 line-through">Rp. {item.harga_normal.toLocaleString()}</p>
+                <p className="text-red-600 font-bold">Rp. {item.harga_diskon.toLocaleString()}</p>
                 </>
             ) : (
-                <p className="text-black font-bold">Rp.{item.price.toLocaleString()}</p>
+              //kalo false, begini
+                <p className="text-black font-bold">Rp.{item.harga_normal.toLocaleString()}</p>
             )}
             </div>
 
