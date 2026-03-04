@@ -40,7 +40,7 @@ export default function Cart() {
     if (!product) return acc;
 
     const price = product.is_diskon
-      ? product.hargadiskon
+      ? product.harga_diskon
       : product.harga_normal;
 
     return acc + price * cartItem.quantity;

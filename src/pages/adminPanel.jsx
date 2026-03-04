@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react"
 import UploadModal from "../components/uploadModal"
 import { createClient } from '@supabase/supabase-js'
+import Loading from "../components/loading"
 
 const supabase = createClient(
   import.meta.env.VITE_SUPABASE_URL,
@@ -11,12 +12,15 @@ export default function AdminPanel() {
   const [isOpen, setIsOpen] = useState(false)
   const [items, setItems] = useState([])
   const [search, setSearch] = useState("")
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     fetchProduct()
   }, [])
 
   async function fetchProduct() {
+    setLoading(true)
+
     const { data, error } = await supabase
     .from("items")
     .select("*")
@@ -25,7 +29,7 @@ export default function AdminPanel() {
         console.error(error)
     }
     setItems(data)
-    
+    setLoading(false)
   }
 
   const filteredProducts = items.filter((item) => 
@@ -35,16 +39,24 @@ export default function AdminPanel() {
     <div style={{ padding: 20 }}>
       <h1>Admin Panel</h1>
 
+
       <button onClick={() => setIsOpen(true)}>
         + Add Product
       </button>
 
-      {isOpen && <UploadModal setIsOpen={setIsOpen} />}
+      {isOpen && (
+        <UploadModal 
+          setIsOpen={setIsOpen} 
+          refreshProduct={fetchProduct}
+        />
+        )}
 
       <hr />
 
       <h2>Product List</h2>
-
+        {loading ? (
+          <Loading text="fetching products..."/>
+          ) : (
       <div className="grid grid-cols-2 md:grid-cols-5 gap-2 border border-black">
         {filteredProducts.map((item) => (
           <div
@@ -81,6 +93,7 @@ export default function AdminPanel() {
           </div>
         ))}
       </div>
+          )}
     </div>
   )
 }

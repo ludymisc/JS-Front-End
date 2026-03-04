@@ -1,11 +1,13 @@
 import { useState } from "react"
+import Loading from "./loading"
 
-export default function UploadModal({ setIsOpen }) {
+export default function UploadModal({ setIsOpen, refreshProduct }) {
   const [name, setName] = useState("")
   const [price, setPrice] = useState("")
   const [file, setFile] = useState(null)
   const [isDiskon, setIsDiskon] = useState(false)
   const [hargaDiskon, setHargaDiskon] = useState("")
+  const [loading, setLoading] = useState(false)
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -21,6 +23,8 @@ export default function UploadModal({ setIsOpen }) {
     formData.append("is_diskon", isDiskon)
     formData.append("harga_diskon", hargaDiskon)
 
+    setLoading(true)
+
     const res = await fetch("http://localhost:3000/api/add-product", {
       method: "POST",
       body: formData
@@ -31,8 +35,11 @@ export default function UploadModal({ setIsOpen }) {
 
 
     if (res.ok) {
+        await refreshProduct()
         setIsOpen(false)
     }
+
+    setLoading(false)
   }
 
   return (
@@ -92,6 +99,7 @@ export default function UploadModal({ setIsOpen }) {
         )}
 
         <br />
+        {loading && <Loading text="Uploading product..." />}
 
         <button type="submit">Upload</button>
         <button onClick={() => setIsOpen(false)}>close</button>

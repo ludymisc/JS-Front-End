@@ -1,5 +1,4 @@
 import '../index.css'
-import items from '../data/items.json'
 import { Link } from 'react-router-dom'
 import QuantityModal from '../components/quantityModal'
 import { CartContext } from '../components/cartContext'
