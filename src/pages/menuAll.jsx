@@ -52,12 +52,12 @@ export default function AllMenu({ search }) { //fungsi AllMenu dengan props sear
     return(
     <section className="px-6 py-8">
       {/* Header */}
-      <div className="flex items-center gap-4 mb-6 border border-black">
-        <h2 className="text-2xl font-bold text-primary border border-black">
+      <div className="flex items-center gap-4 mb-6   ">
+        <h2 className="text-2xl font-bold text-primary   ">
           CHECK OUT ALL OUR MENU
         </h2>
 
-        <div className="flex-1 h-[2px] bg-primary border border-black"></div>
+        <div className="flex-1 h-[2px] bg-primary   "></div>
 
         <Link 
             to="/" 
@@ -70,7 +70,7 @@ export default function AllMenu({ search }) { //fungsi AllMenu dengan props sear
       </div>
 
       {/* Produk */}
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-2 border border-black">
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-2   ">
         {filteredProducts.map((item) => ( 
           //mapping item (dari dumy data) berdasarkan identitas
           // Ambil array filteredProducts

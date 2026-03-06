@@ -1,15 +1,17 @@
 import { useContext } from "react"
 import { AuthContext } from "./auth.context"
 import { Navigate } from "react-router-dom"
+import Loading from "../loading"
 
 export default function ProtectedRoute({ children }) {
-  const { isAdmin } = useContext(AuthContext)
+  const { isAdmin, loading } = useContext(AuthContext)
 
-  console.log("ProtectedRoute isAdmin:", isAdmin)
-  
+  if (loading) {
+    return <Loading text="Checking access..." />
+  }
+
   if (!isAdmin) {
-      console.log("bukan admin")
-      return <Navigate to="/" />
+    return <Navigate to="/" replace />
   }
 
   return children

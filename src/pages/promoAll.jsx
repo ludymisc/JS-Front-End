@@ -53,12 +53,12 @@ export default function AllPromo({ search }) {
     <section className="px-6 py-8">
 
       {/* Header */}
-      <div className="flex items-center gap-4 mb-6 border border-black">
-        <h2 className="text-2xl font-bold text-primary border border-black">
+      <div className="flex items-center gap-4 mb-6  ">
+        <h2 className="text-2xl font-bold text-primary  ">
           DONT MISS THE PROMO!
         </h2>
 
-        <div className="flex-1 h-[2px] bg-primary border border-black"></div>
+        <div className="flex-1 h-[2px] bg-primary  "></div>
 
         <Link 
             to="/" 
@@ -71,7 +71,7 @@ export default function AllPromo({ search }) {
       </div>
 
       {/* Produk */}
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-2 border border-black">
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-2  ">
         {filteredProducts.map((item) => ( //data item yang sudah di filter kemudian di loop dan di tampilkan
           <div
             key={item.id}

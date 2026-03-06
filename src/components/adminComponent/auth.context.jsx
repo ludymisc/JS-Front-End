@@ -4,12 +4,14 @@ export const AuthContext = createContext()
 
 export function AuthProvider({ children }) {
   const [isAdmin, setIsAdmin] = useState(false)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     const stored = localStorage.getItem("isAdmin")
     if (stored === "true") {
       setIsAdmin(true)
     }
+    setLoading(false)
   }, [])
 
   const login = () => {
@@ -23,8 +25,8 @@ export function AuthProvider({ children }) {
   }
 
   return (
-    <AuthContext.Provider value={{ isAdmin, login, logout }}>
-      {children}
+    <AuthContext.Provider value={{ isAdmin, login, logout, loading }}>
+      {!loading && children}
     </AuthContext.Provider>
   )
 }

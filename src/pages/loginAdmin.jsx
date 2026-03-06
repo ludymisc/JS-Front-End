@@ -3,7 +3,7 @@ import {
     useContext
 } from 'react'
 import { useNavigate } from 'react-router-dom';
-import { AuthContext } from '../components/auth.context';
+import { AuthContext } from '../components/adminComponent/auth.context';
 
 
 export default function LoginPage() {

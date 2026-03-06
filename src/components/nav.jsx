@@ -5,13 +5,13 @@ import { Link } from "react-router-dom";
 export default function Navbar ({search, setSearch, setIsOpen}) {
    
     return(
-        <div className="bg-primary flex border border-black">
-            <div className="w-1/4 m-2 border border-black">
-            <button onClick={() => setIsOpen(true)}>
-                button iseng buat test upload
-            </button>
+        <div className="bg-primary flex ">
+            <div className="font-bold w-1/4 m-2 ">
+
+                ceritanya logo
+            
             </div>
-            <div className="w-2/4 m-2 flex justify-center border border-black">
+            <div className="w-2/4 m-2 flex justify-center">
                 <form className="w-full">
                     <input 
                         type="text"
@@ -22,7 +22,7 @@ export default function Navbar ({search, setSearch, setIsOpen}) {
                     />
                 </form>
             </div>
-            <div className="w-1/4 mx-4 flex items-center justify-end border border-black" >
+            <div className="w-1/4 mx-4 flex items-center justify-end     " >
                 <button>
                     <Link to="/cart"><FaCartShopping className="text-3xl"/></Link>
                 </button>

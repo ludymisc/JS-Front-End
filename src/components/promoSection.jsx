@@ -44,12 +44,12 @@ export default function Promo({ search, limit }) {
     <section className="px-6 py-8">
 
       {/* Header */}
-      <div className="flex items-center gap-4 mb-6 border border-black">
-        <h2 className="text-2xl font-bold text-primary border border-black">
+      <div className="flex items-center gap-4 mb-6  ">
+        <h2 className="text-2xl font-bold text-primary  ">
           HOT PROMO
         </h2>
 
-        <div className="flex-1 h-[2px] bg-primary border border-black"></div>
+        <div className="flex-1 h-[2px] bg-primary  "></div>
 
         <Link 
             to="/itemsOnPromo" 
@@ -62,7 +62,7 @@ export default function Promo({ search, limit }) {
       </div>
 
       {/* Produk */}
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-2 border border-black">
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-2  ">
         {filteredProducts.map((item) => (
           <div
             key={item.id}

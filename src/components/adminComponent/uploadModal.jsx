@@ -1,5 +1,5 @@
 import { useState } from "react"
-import Loading from "./loading"
+import Loading from "../loading"
 
 export default function UploadModal({ setIsOpen, refreshProduct }) {
   const [name, setName] = useState("")

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import UploadModal from "../components/uploadModal"
+import UploadModal from '../components/adminComponent/uploadModal'
 import { createClient } from '@supabase/supabase-js'
 import Loading from "../components/loading"
 

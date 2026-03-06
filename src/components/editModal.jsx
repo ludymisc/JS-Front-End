@@ -1,9 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function EditModal({ item, onClose,onConfirm }) {
-    const [ quantity, setQuntity ] = useState(1);
+    const [ quantity, setQuantity ] = useState(1);
 
-    if (!item) return null;
+    // if (!item) return null;
+
+    useEffect(() => {
+        {item ? (setQuantity(item.quantity)) : (setQuantity(1))}
+    }, [item])
 
     return(
         <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
@@ -24,7 +28,7 @@ export default function EditModal({ item, onClose,onConfirm }) {
                 className="flex items-center gap-2 mb-4 border border-black">
                     <button
                     className="px-3 py-1 border border border-black"
-                    onClick={() => setQuntity(q => Math.max(1, q - 1))}>
+                    onClick={() => setQuantity(q => Math.max(1, q - 1))}>
                         -
                     </button>
 
@@ -33,11 +37,11 @@ export default function EditModal({ item, onClose,onConfirm }) {
                     value={quantity}
                     min="1"
                     className="w-16 text-center border border border-black"
-                    onChange={(e) => setQuntity(Math.max(Number(e.target.value)))}/>
+                    onChange={(e) => setQuantity(Math.max(1, Number(e.target.value) || 1 ))}/>
 
                     <button
                     className="px-3 py-1 border border border-black"
-                    onClick={() => setQuntity(q => Math.max(1, q + 1))}>
+                    onClick={() => setQuantity(q => Math.max(1, q + 1))}>
                         +
                     </button>
 
