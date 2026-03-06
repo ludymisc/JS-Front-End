@@ -1,36 +1,45 @@
 import { useState, useEffect } from "react"
 import UploadModal from '../components/adminComponent/uploadModal'
-import { createClient } from '@supabase/supabase-js'
+import { nukeProduct, fetchProducts } from "../service/adminPanelService"
 import Loading from "../components/loading"
-
-const supabase = createClient(
-  import.meta.env.VITE_SUPABASE_URL,
-  import.meta.env.VITE_SUPABASE_ANON_KEY
-)
+import { useContext } from "react"
+import { AuthContext } from "../components/adminComponent/auth.context"
 
 export default function AdminPanel() {
   const [isOpen, setIsOpen] = useState(false)
   const [items, setItems] = useState([])
   const [search, setSearch] = useState("")
   const [loading, setLoading] = useState(true)
+  const {logout} = useContext(AuthContext)
+
+  const handleLogOut = () => {logout()}
 
   useEffect(() => {
     fetchProduct()
   }, [])
 
   async function fetchProduct() {
-    setLoading(true)
+  setLoading(true)
 
-    const { data, error } = await supabase
-    .from("items")
-    .select("*")
-
-    if (error) {
-        console.error(error)
-    }
+  try {
+    const data = await fetchProducts()
     setItems(data)
-    setLoading(false)
+  } catch (error) {
+    console.error(error)
   }
+
+  setLoading(false)
+}
+
+async function nukeTable() {
+  try {
+    await nukeProduct()
+    fetchProduct()
+  } catch (error) {
+    console.error(error)
+  }
+}
+
 
   const filteredProducts = items.filter((item) => 
     item.nama.toLowerCase().includes(search.toLowerCase()))
@@ -42,6 +51,12 @@ export default function AdminPanel() {
 
       <button onClick={() => setIsOpen(true)}>
         + Add Product
+      </button>
+      <button onClick={nukeTable} className="mx-4">
+        NUKE!
+      </button>
+      <button onClick={handleLogOut}>
+        Log Out
       </button>
 
       {isOpen && (
