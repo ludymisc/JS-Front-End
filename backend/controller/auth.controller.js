@@ -47,6 +47,10 @@ import sql from '../db/supabase.js'
 import multer from 'multer'
 import supabase from '../db/storage.js'
 import bcrypt from 'bcrypt'
+import jwt from "jsonwebtoken"
+import dotenv from "dotenv"
+
+dotenv.config({ path: "../../.env"  })
 
 const router = Router();
 const upload = multer()
@@ -55,7 +59,7 @@ router.post('/login', async(req, res) => {
   try{
     const { username, password } = req.body;
     if (!username || !password) {
-      res.status(400).json({ message: "semua field wajib diisi" })
+      return res.status(400).json({ message: "semua field wajib diisi" })
     }
 
     const result = await sql 
@@ -73,9 +77,23 @@ router.post('/login', async(req, res) => {
     if (!isPasswordTrue) {
       return res.status(400).json({ message: "password tidak cocok" })
     } 
+
+    const token = jwt.sign(
+      {
+        id: admin.id,
+        username: admin.username
+      },
+      process.env.JWT_SECRET,
+      {
+        expiresIn:"1h"
+      }
+    )
     
     res.status(200).json({ 
       message: "admin datank",
+      id: admin.id,
+      username: admin.username,
+      token: token,
       admin: true })
   } catch (error) {
     res.status(500).json({ message: "server error" })
@@ -85,10 +103,13 @@ router.post('/login', async(req, res) => {
 router.post('/add-product', upload.single('file'), async (req, res) => {
   try {
     const file = req.file
+    const admin_id = req.body.admin_id
     const { name, price, is_diskon, harga_diskon } = req.body
 
     if (!file) {
       return res.status(400).json({ message: "File is required" })
+    } else if(!admin_id) {
+      return res.status(400).json({ message: "kamu admin mana? kok idnya gaada"})
     }
     const fileExt = file.originalname.split('.').pop()
     const fileName = `${crypto.randomUUID()}.${fileExt}`

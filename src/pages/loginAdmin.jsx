@@ -5,7 +5,6 @@ import {
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../components/adminComponent/auth.context';
 
-
 export default function LoginPage() {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
@@ -14,23 +13,28 @@ export default function LoginPage() {
 
     const handleLogin = async(e) => {
         e.preventDefault()
-
         try{
             const response = await fetch("http://localhost:3000/api/login", {
                 method: 'POST',
                 headers: {
                     'Content-Type':"application/json"
                 },
+
                 body: JSON.stringify({ username, password })
             })
         
             const data = await response.json()
 
+            if (!response.ok) {
+            console.log("LOGIN ERROR:", data.message)
+            return
+            }
+
             if (response.ok) {
                 // simpan user info di localStorage
-                localStorage.setItem('user_id', data.user_id);
+                localStorage.setItem('user_id', data.id);
+                localStorage.setItem('token', data.token);
                 localStorage.setItem('username', data.username);
-                console.log(data)
                 console.log('FULL LOGIN RESPONSE:', data);
                 login()
                 navigate('/admin');
