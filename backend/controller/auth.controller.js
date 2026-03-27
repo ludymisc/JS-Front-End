@@ -41,16 +41,18 @@
  * - Bucket Supabase harus bernama "producta"
  * - Kolom database harus: name, price, image_url
  * - crypto.randomUUID() dipakai untuk menghindari filename collision
- */}
+ **/}
 import { Router } from "express";
 import sql from '../db/supabase.js'
 import multer from 'multer'
 import supabase from '../db/storage.js'
 import bcrypt from 'bcrypt'
-import jwt from "jsonwebtoken"
 import dotenv from "dotenv"
+import authMiddleware from '../middleware/user.middleware.js'
+import crypto from 'crypto'
+//import { supabase } from "../../src/lib/supabaseClient.js";
 
-dotenv.config({ path: "../../.env"  })
+//dotenv.config({ path : '../../.env' })
 
 const router = Router();
 const upload = multer()
@@ -78,32 +80,35 @@ router.post('/login', async(req, res) => {
       return res.status(400).json({ message: "password tidak cocok" })
     } 
 
-    const token = jwt.sign(
-      {
-        id: admin.id,
-        username: admin.username
-      },
-      process.env.JWT_SECRET,
-      {
-        expiresIn:"1h"
-      }
-    )
+    const {data, error} = await supabase.auth.signInWithPassword({
+    email: username,
+    password: password
+    })
+    console.log(error)
+    console.log("USER:", data)
     
     res.status(200).json({ 
-      message: "admin datank",
-      id: admin.id,
-      username: admin.username,
-      token: token,
-      admin: true })
+      message: "Login Berhasil",
+      id: data.user.id,
+      username: data.user.email,
+      token: data.session.access_token, // access token untuk Authorization header
+      refresh_token: data.session.refresh_token, // return refresh token so frontend can set session
+      admin: true 
+    });
   } catch (error) {
     res.status(500).json({ message: "server error" })
   }
 })
 
-router.post('/add-product', upload.single('file'), async (req, res) => {
+router.post('/add-product', authMiddleware, upload.single('file'), async (req, res) => {
   try {
+    const token = req.headers.authorization?.split(" ")[1]
+    const { data: { user } } = await supabase.auth.getUser(token);
     const file = req.file
-    const admin_id = req.body.admin_id
+
+    // Map Supabase auth user to local admins table to get the correct admin id
+    const adminRows = await sql`SELECT id FROM admins WHERE username=${user?.email}`
+    const admin_id = adminRows?.length ? adminRows[0].id : null
     const { name, price, is_diskon, harga_diskon } = req.body
 
     if (!file) {
@@ -113,32 +118,34 @@ router.post('/add-product', upload.single('file'), async (req, res) => {
     }
     const fileExt = file.originalname.split('.').pop()
     const fileName = `${crypto.randomUUID()}.${fileExt}`
-
     const parsedPrice = Number(price)
     const isDiskonBool = is_diskon === "true"
     const parsedHargaDiskon = isDiskonBool ? Number(harga_diskon) : null
 
     const uploadResult = await supabase.storage
-    .from('producta')
-    .upload(fileName, file.buffer, {
-      contentType: file.mimetype
-    })
+      .from('producta')
+      .upload(fileName, file.buffer, {
+        contentType: file.mimetype,
+        upsert: false
+      });
 
     if (uploadResult.error) {
       return res.status(500).json(uploadResult.error)
     }
 
-    const { publicUrl } = supabase.storage
+    // use the uploaded filename to build/get the public url
+    const { data: urlData } = supabase.storage
       .from('producta')
-      .getPublicUrl(uploadResult.data.path).data
+      .getPublicUrl(fileName);
+    const publicUrl = urlData.publicUrl;
 
     if (isDiskonBool && !harga_diskon) {
       return res.status(400).json({ message: "Harga diskon wajib diisi" })
     }
 
     const result = await sql`
-      INSERT INTO items (nama, harga_normal, image_url, is_diskon, harga_diskon, updated_at, created_at)
-      VALUES (${name}, ${parsedPrice}, ${publicUrl}, ${isDiskonBool}, ${parsedHargaDiskon}, NOW(), NOW())
+      INSERT INTO items (nama, harga_normal, image_url, is_diskon, harga_diskon, admin_id, updated_at, created_at)
+      VALUES (${name}, ${parsedPrice}, ${publicUrl}, ${isDiskonBool}, ${parsedHargaDiskon}, ${admin_id}, NOW(), NOW())
       RETURNING *
     `
 

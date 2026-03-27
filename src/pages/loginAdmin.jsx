@@ -4,6 +4,7 @@ import {
 } from 'react'
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../components/adminComponent/auth.context';
+import { supabase } from '../lib/supabaseClient';
 
 export default function LoginPage() {
     const [username, setUsername] = useState('')
@@ -24,6 +25,14 @@ export default function LoginPage() {
             })
         
             const data = await response.json()
+
+            localStorage.setItem("token", data.token)
+
+            // set supabase client session with both access and refresh tokens
+            await supabase.auth.setSession({
+                access_token: data.token,
+                refresh_token: data.refresh_token
+            })
 
             if (!response.ok) {
             console.log("LOGIN ERROR:", data.message)

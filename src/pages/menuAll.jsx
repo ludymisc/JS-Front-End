@@ -7,12 +7,7 @@ import { // Import hooks React:
 import QuantityModal from '../components/quantityModal';
 import { CartContext } from '../components/cartContext'; //ngambil fungsi cartContext
 import { Link } from 'react-router-dom' //mirip anchor, tapi gak refresh page (preventDefault)
-import { createClient } from '@supabase/supabase-js';
-
-const supabase = createClient(
-  import.meta.env.VITE_SUPABASE_URL,
-  import.meta.env.VITE_SUPABASE_ANON_KEY
-)
+import { supabase } from '../lib/supabaseClient'
 
 export default function AllMenu({ search }) { //fungsi AllMenu dengan props search untuk fungsionalitas search bar dari navbar
     const [quantity, setQuantity] = useState(1); 

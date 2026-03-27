@@ -4,6 +4,7 @@ import { nukeProduct, fetchProducts } from "../service/adminPanelService"
 import Loading from "../components/loading"
 import { useContext } from "react"
 import { AuthContext } from "../components/adminComponent/auth.context"
+import { supabase } from "../lib/supabaseClient"
 
 export default function AdminPanel() {
   const [isOpen, setIsOpen] = useState(false)
@@ -20,6 +21,8 @@ export default function AdminPanel() {
 
   async function fetchProduct() {
   setLoading(true)
+  const { data } = await supabase.auth.getUser()
+  console.log("USER:", data)
 
   try {
     const data = await fetchProducts()
@@ -31,14 +34,14 @@ export default function AdminPanel() {
   setLoading(false)
 }
 
-async function nukeTable() {
-  try {
-    await nukeProduct()
-    fetchProduct()
-  } catch (error) {
-    console.error(error)
-  }
-}
+// async function nukeTable() {
+//   try {
+//     await nukeProduct()
+//     fetchProduct()
+//   } catch (error) {
+//     console.error(error)
+//   }
+// }
 
 
   const filteredProducts = items.filter((item) => 
@@ -52,9 +55,9 @@ async function nukeTable() {
       <button onClick={() => setIsOpen(true)}>
         + Add Product
       </button>
-      <button onClick={nukeTable} className="mx-4">
+      {/* <button onClick={nukeTable} className="mx-4">
         NUKE!
-      </button>
+      </button> */}
       <button onClick={handleLogOut}>
         Log Out
       </button>

@@ -1,5 +1,6 @@
 import { useState } from "react"
 import Loading from "../loading"
+import { supabase } from "../../lib/supabaseClient"
 
 export default function UploadModal({ setIsOpen, refreshProduct }) {
   const [name, setName] = useState("")
@@ -25,8 +26,21 @@ export default function UploadModal({ setIsOpen, refreshProduct }) {
 
     setLoading(true)
 
+    // get current supabase session and access token
+    const { data } = await supabase.auth.getSession()
+    const token = data?.session?.access_token
+
+    if (!token) {
+      setLoading(false)
+      alert("Not authenticated. Please sign in as admin before uploading.")
+      return
+    }
+
     const res = await fetch("http://localhost:3000/api/add-product", {
       method: "POST",
+      headers: {
+      Authorization: `Bearer ${token}`
+    },
       body: formData
     })
 
