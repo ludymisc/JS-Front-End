@@ -1,9 +1,15 @@
 import { supabase } from "../lib/supabaseClient"
 
 export async function fetchProducts() {
+  const { data: userData } = await supabase.auth.getUser()
+
+  const user = userData.user 
+
+  if(!user) return
   const { data, error } = await supabase
     .from("items")
-    .select("*")
+    .select("*", "admind!admins_id(id)")
+    .eq("admins_id", user.id)
 
   if (error) throw error
   return data

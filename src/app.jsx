@@ -32,7 +32,7 @@ export default function App() {
       )}
       <Routes>
         <Route 
-          path="/" 
+          path="/restaurant/:slug/:table_num" 
           element={
             <>
               <Promo search={search} limit={5}/>
@@ -40,9 +40,9 @@ export default function App() {
             </>
           } 
         />
-         <Route path="/Menus" element={<AllMenu search={search}/>} />
-         <Route path="/itemsOnPromo" element={<AllPromo search={search}/>} />
-         <Route path="/cart" element={<Cart />} />
+         <Route path="/restaurant/:slug/:table_num/menus" element={<AllMenu search={search}/>} />
+         <Route path="/restaurant/:slug/:table_num/promos" element={<AllPromo search={search}/>} />
+         <Route path="/restaurant/:slug/:table_num/cart" element={<Cart />} />
          <Route path="/upload" element={<UploadTest/>} />
          <Route 
           path="/admin" 

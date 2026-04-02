@@ -35,10 +35,20 @@ export default function AllPromo({ search }) {
       fetchProduct()
     }, [])
 
+    // async function fetchProduct() {
+    //   const { data, error } = await supabase
+    //   .from("items")
+    //   .select("*")
+
+    //   {error && (console.error(error))}
+    //   setItems(data)
+    // }
+
     async function fetchProduct() {
       const { data, error } = await supabase
       .from("items")
-      .select("*")
+      .select("*, admins!inner(slug)") // join ke admins
+      .eq("admins.slug", slug) 
 
       {error && (console.error(error))}
       setItems(data)

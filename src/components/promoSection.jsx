@@ -1,5 +1,5 @@
 import '../index.css'
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import { useState, useContext, useEffect } from 'react'
 import QuantityModal from './quantityModal'
 import { CartContext } from './cartContext'
@@ -9,21 +9,34 @@ export default function Promo({ search, limit }) {
   const [selectedItem, setSelectedItem] = useState(null);
   const [items, setItems] = useState([])
   const { handleAddToCart } = useContext(CartContext);
+  const { slug } = useParams()
 
   useEffect(() => {
     fetchProduct()
-  }, [])
+  }, [ slug ])
 
-  async function fetchProduct() {
-    const { data, error } = await supabase
-    .from("items")
-    .select("*")
+    async function fetchProduct() {
+    //   console.log("SLUG:", slug)
+    //   const { data, error } = await supabase
+    //   .from("items")
+    //   .select("*, admins!inner(slug)") // join ke admins
+    //   .eq("admins.slug", slug) 
 
-    if(error) {
-      console.error(error)
-    }
-    setItems(data)
-  }
+    //   {error && (console.error(error))}
+    //   setItems(data)
+    // }
+
+  const { data: admin } = await supabase
+  .from("admins")
+  .select("id")
+  .eq("slug", slug)
+  .single()
+
+  const { data: items } = await supabase
+  .from("items")
+  .select("*")
+  .eq("admins_id", admin.id) 
+  setItems(items)}
   
   let filteredProducts = items.filter((item) =>
       item.is_diskon && item.nama.toLowerCase().includes(search.toLowerCase()))

@@ -27,10 +27,16 @@ export default function UploadModal({ setIsOpen, refreshProduct }) {
     setLoading(true)
 
     // get current supabase session and access token
+    // 🔑 1. Ambil "Kunci Akses" (Session) yang sedang aktif di browser saat ini.
+    // Kita butuh Access Token asli dari Supabase supaya Server percaya dan 
+    // mengizinkan kita upload gambar ke Storage.
     const { data } = await supabase.auth.getSession()
     const token = data?.session?.access_token
 
+    // 🚫 2. Pengecekan Keamanan: Jika kuncinya tidak ada (null/undefined), 
+    // kita hentikan prosesnya di sini sebelum membuang-buang resource server.
     if (!token) {
+      // Matikan loading supaya tombol 'Upload' bisa diklik lagi setelah User baca alert.
       setLoading(false)
       alert("Not authenticated. Please sign in as admin before uploading.")
       return

@@ -27,11 +27,10 @@ export default function AllMenu({ search }) { //fungsi AllMenu dengan props sear
     async function fetchProduct() {
       const { data, error } = await supabase
       .from("items")
-      .select("*")
+      .select("*, admins!admins_id(slug)") // join ke admins
+      .eq("admins.slug", slug) 
 
-      if(error) {
-        console.error(error)
-      }
+      {error && (console.error(error))}
       setItems(data)
     }
 
