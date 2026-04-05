@@ -6,7 +6,7 @@ import { // Import hooks React:
   from "react"; 
 import QuantityModal from '../components/quantityModal';
 import { CartContext } from '../components/cartContext'; //ngambil fungsi cartContext
-import { Link } from 'react-router-dom' //mirip anchor, tapi gak refresh page (preventDefault)
+import { Link, useNavigate, useParams } from 'react-router-dom' //mirip anchor, tapi gak refresh page (preventDefault)
 import { supabase } from '../lib/supabaseClient'
 
 export default function AllMenu({ search }) { //fungsi AllMenu dengan props search untuk fungsionalitas search bar dari navbar
@@ -19,15 +19,18 @@ export default function AllMenu({ search }) { //fungsi AllMenu dengan props sear
     //selectedItem = item yang lagi dipilih
     //default/state awal = null (belum ada yang dipilih)
     const [items, setItems] = useState([])
+    const { slug } = useParams();
+    const navigate = useNavigate();
 
     useEffect(() => {
       fetchProduct()
-    }, [])
+    }, [ slug ])
 
     async function fetchProduct() {
+      console.log("SLUG:", slug)
       const { data, error } = await supabase
       .from("items")
-      .select("*, admins!admins_id(slug)") // join ke admins
+      .select("*, admins!inner(slug)") // join ke admins
       .eq("admins.slug", slug) 
 
       {error && (console.error(error))}
@@ -53,13 +56,13 @@ export default function AllMenu({ search }) { //fungsi AllMenu dengan props sear
 
         <div className="flex-1 h-[2px] bg-primary   "></div>
 
-        <Link 
-            to="/" 
+        <button 
+            onClick={() => navigate(-1)}
             className="ml-auto text-sm font-semibold text-primary hover:underline" > 
             <span
             className='text-md'
             >Back</span>
-        </Link>
+        </button>
 
       </div>
 

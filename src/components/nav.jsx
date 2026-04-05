@@ -24,7 +24,7 @@ export default function Navbar ({search, setSearch, setIsOpen}) {
             </div>
             <div className="w-1/4 mx-4 flex items-center justify-end     " >
                 <button>
-                    <Link to="/cart"><FaCartShopping className="text-3xl"/></Link>
+                    <Link to="/restaurant/:slug/:table_num/cart"><FaCartShopping className="text-3xl"/></Link>
                 </button>
             </div>
         </div>

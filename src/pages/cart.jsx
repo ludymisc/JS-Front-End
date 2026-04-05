@@ -1,9 +1,10 @@
 import "../index.css"
 import { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { CartContext } from "../components/cartContext";
-import { Link } from 'react-router-dom'
 import ConfirmModal from "../components/deleteModal";
 import EditModal from "../components/editModal";
+import PurchaseModal from "../components/purchase";
 import { supabase } from "../lib/supabaseClient";
 
 export default function Cart() {
@@ -12,6 +13,8 @@ export default function Cart() {
   const [modalType, setModalType] = useState(null);
   const [isSelectedId, setIsSelectedId] = useState(null);
   const [items, setItems] = useState([]);
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchProduct();
@@ -47,12 +50,12 @@ export default function Cart() {
         <h2 className="text-2xl font-bold text-primary">Your Cart</h2>
         <div className="flex-1 h-[2px] bg-primary"></div>
 
-        <Link 
-          to="/" 
+        <button 
+          onClick={() => navigate(-1)}
           className="ml-auto text-md font-semibold text-primary hover:underline"
         > 
           Back
-        </Link>
+        </button>
       </div>
 
       {cart.length === 0 ? (
@@ -109,6 +112,14 @@ export default function Cart() {
           <h3 className="text-xl font-bold mt-6">
             Grand Total: Rp {grandTotal.toLocaleString()}
           </h3>
+
+          <button 
+          onClick={() => {
+            setModalType("purchase");
+          }}
+          className="bg-primary text-white rounded-md cursor-pointer p-2">
+            bayar sekarang
+          </button>
         </>
       )}
 
@@ -139,6 +150,14 @@ export default function Cart() {
             setModalType(null);
             setIsSelectedId(null);
           }}
+        />
+      )} 
+
+      {modalType === "purchase" && (
+        <PurchaseModal 
+          onClose={() => {setModalType(null);}}
+          onConfirm={() => {setModalType(null);}}
+
         />
       )}
     </div>

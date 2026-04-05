@@ -1,5 +1,5 @@
 import '../index.css'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate, useParams } from 'react-router-dom'
 import QuantityModal from '../components/quantityModal'
 import { CartContext } from '../components/cartContext'
 import { 
@@ -18,6 +18,7 @@ export default function AllPromo({ search }) {
     const { handleAddToCart } = useContext(CartContext);
     //ini apaan jir
     //Ambil function handleAddToCart dari global cart context.
+    const navigate = useNavigate();
     let filteredProducts = items.filter((item) =>
             item.is_diskon && item.nama.toLowerCase().includes(search.toLowerCase()))
         /**
@@ -30,6 +31,7 @@ export default function AllPromo({ search }) {
      * @param {string} search - Keyword pencarian yang diinput user.
      * @returns {Array<Object>} Array produk yang memenuhi kriteria filter.
      */
+    const { slug } = useParams();
 
     useEffect(() => {
       fetchProduct()
@@ -65,13 +67,13 @@ export default function AllPromo({ search }) {
 
         <div className="flex-1 h-[2px] bg-primary  "></div>
 
-        <Link 
-            to="/" 
+        <button
+            onClick={() => navigate(-1)} 
             className="ml-auto text-sm font-semibold text-primary hover:underline" > 
             <span
             className='text-md'
             >Back</span>
-        </Link>
+        </button>
 
       </div>
 

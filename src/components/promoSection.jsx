@@ -9,7 +9,7 @@ export default function Promo({ search, limit }) {
   const [selectedItem, setSelectedItem] = useState(null);
   const [items, setItems] = useState([])
   const { handleAddToCart } = useContext(CartContext);
-  const { slug } = useParams()
+  const { slug, table_num } = useParams()
 
   useEffect(() => {
     fetchProduct()
@@ -59,7 +59,7 @@ export default function Promo({ search, limit }) {
         <div className="flex-1 h-[2px] bg-primary  "></div>
 
         <Link 
-            to="/itemsOnPromo" 
+            to={`/restaurant/${slug}/${table_num}/promos`}
             className="ml-auto text-sm font-semibold text-primary hover:underline" > 
             <span
             className='text-md'

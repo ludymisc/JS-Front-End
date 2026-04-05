@@ -14,7 +14,7 @@ export default function Menu({ search, limit }) {
   //ini apaan jir
   //Ambil function handleAddToCart dari global cart context.
   const [items, setItems] = useState([])
-  const { slug } = useParams()
+  const { slug, table_num } = useParams()
 
   useEffect(() => {
     fetchProduct()
@@ -61,7 +61,7 @@ export default function Menu({ search, limit }) {
         <div className="flex-1 h-[2px] bg-primary  "></div>
 
         <Link 
-            to="/Menus" 
+            to={`/restaurant/${slug}/${table_num}/menus`}
             className="ml-auto text-sm font-semibold text-primary hover:underline" > 
             <span
             className='text-md'
