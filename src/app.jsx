@@ -11,13 +11,14 @@ import UploadModal from "./components/adminComponent/uploadModal"
 import ProtectedRoute from "./components/adminComponent/adminChecker"
 import AdminPanel from "./pages/adminPanel"
 import LoginPage from "./pages/loginAdmin"
+import Layout from "./pages/layoutTest"
 
 export default function App() {
     const [search, setSearch] = useState("")
     const [isOpen, setIsOpen] = useState(false)
     const location = useLocation()
 
-    const hideNavbar = location.pathname === "/login"
+    const hideNavbar = location.pathname === "/login" || "/layout"
   return (
     <>
       {!hideNavbar && (
@@ -53,6 +54,7 @@ export default function App() {
           }
         />
         <Route path='/login' element={<LoginPage/>} />
+        <Route path='/layout' search={search} setSearch={setSearch} element={<Layout/>}/>
       </Routes>
     </>
   )

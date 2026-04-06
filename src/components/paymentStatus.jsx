@@ -21,7 +21,7 @@ export default function PaymentModal({ onClose }) {
                     const data = await response.json();
                     console.log(data)
                     
-                    setErrorData(data.no || data.reason || "Unknown Error"); 
+                    setErrorData(data.reason || "Unknown Error"); 
                     setStatus("gagal");
                 } catch (err) {
                     setErrorData("999"); 
