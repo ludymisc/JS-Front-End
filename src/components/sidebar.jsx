@@ -4,9 +4,9 @@ import { MdOutlineDashboard } from "react-icons/md";
 import { IoIosArrowDown, IoIosArrowForward } from "react-icons/io";
 import sawitDB from "../../sawitDB.png"; // Sesuaikan path gambarnya
 
-export default function Sidebar() {
+export default function Sidebar({ search, setSearch}) {
     const [isOpen, setIsOpen] = useState(false);
-    const [search, setSearch] = useState("");
+    //const [search, setSearch] = useState("");
 
     return (
         <aside className="w-64 h-screen fixed top-0 left-0 hidden lg:block bg-sub1 p-6 text-white overflow-y-auto z-40">
