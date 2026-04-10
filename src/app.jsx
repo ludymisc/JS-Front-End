@@ -46,7 +46,7 @@ export default function App() {
               karena di LG sudah ada Sidebar. */}
         {!isAuthPage && isDashboard && (
           <div className={isDashboard ? "lg:hidden" : "block"}>
-            <Navbar search={search} setSearch={setSearch} />
+            <Navbar role={currentRole} search={search} setSearch={setSearch} />
           </div>
         )}
 

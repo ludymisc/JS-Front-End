@@ -1,8 +1,11 @@
 import "../index.css"
 import { FaCartShopping } from "react-icons/fa6";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
+import { MENU_CONFIG } from "../menuConfig";
 
-export default function Navbar ({search, setSearch, setIsOpen}) {
+export default function Navbar ({ role, search, setSearch }) {
+    const menus = MENU_CONFIG[role] || MENU_CONFIG.user
+    const location = useLocation()
    
     return(
         <div className="bg-primary flex ">
@@ -22,10 +25,27 @@ export default function Navbar ({search, setSearch, setIsOpen}) {
                     />
                 </form>
             </div>
+            <p className="text-xs text-gray-400 uppercase font-bold mb-2">
+          {role === 'admin' ? 'Admin Panel' : 'Menu Utama'}
+        </p>
             <div className="w-1/4 mx-4 flex items-center justify-end     " >
-                <button>
-                    <Link to="/restaurant/:slug/:table_num/cart"><FaCartShopping className="text-3xl"/></Link>
-                </button>
+                {menus.map((item, index) => {
+          // Logika untuk menandai menu yang sedang aktif
+          const isActive = location.pathname === item.path;
+          
+          return (
+            <Link 
+              key={index} 
+              to={item.path}
+              className={`flex items-center gap-3 p-3 rounded-lg transition-all ${
+                isActive ? "bg-sub2 text-white" : "hover:bg-white/10 text-gray-300"
+              }`}
+            >
+              <span className="text-xl">{item.icon}</span>
+              <span className="font-medium">{item.label}</span>
+            </Link>
+          );
+        })}
             </div>
         </div>
     )
