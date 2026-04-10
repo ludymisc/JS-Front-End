@@ -20,15 +20,20 @@ export default function App() {
   const location = useLocation()
 
   const isAuthPage = location.pathname === "/login";
+  const isDashboard = location.pathname.startsWith("/admin") || 
+                      location.pathname === "/layout" || 
+                      location.pathname.startsWith("/restaurant");
 
-  const isDashboard = location.pathname.startsWith("/admin") || location.pathname === "/layout" || location.pathname.startsWith("/restaurant") ;
+  // 1. Tentukan role di sini sebagai variabel
+  const currentRole = location.pathname.startsWith("/admin") ? "admin" : "user";
+
 
   return (
     <div className="flex min-h-screen">
       {/* SIDEBAR: Hanya muncul di rute Dashboard DAN hanya di layar LG (Desktop) */}
       {!isAuthPage && isDashboard && (
         <aside className="hidden lg:block w-64 fixed h-full bg-sub1 z-50">
-          <Sidebar search={search} setSearch={setSearch} />
+          <Sidebar role={currentRole} search={search} setSearch={setSearch} />
         </aside>
       )}
 
@@ -39,7 +44,7 @@ export default function App() {
             - Muncul jika bukan halaman Auth.
             - Jika di halaman Dashboard, dia HANYA muncul di layar SM/MD (Mobile), 
               karena di LG sudah ada Sidebar. */}
-        {!isAuthPage && (
+        {!isAuthPage && isDashboard && (
           <div className={isDashboard ? "lg:hidden" : "block"}>
             <Navbar search={search} setSearch={setSearch} />
           </div>

@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { FaSearch } from "react-icons/fa";
-import { MdOutlineDashboard } from "react-icons/md";
-import { IoIosArrowDown, IoIosArrowForward } from "react-icons/io";
 import sawitDB from "../../sawitDB.png"; // Sesuaikan path gambarnya
+import { MENU_CONFIG } from "../menuConfig";
+import { Link, useLocation } from "react-router-dom";
 
-export default function Sidebar({ search, setSearch}) {
+export default function Sidebar({ role, search, setSearch}) {
     const [isOpen, setIsOpen] = useState(false);
     //const [search, setSearch] = useState("");
+    const menus = MENU_CONFIG[role] || MENU_CONFIG.user;
+    const location = useLocation();
 
     return (
         <aside className="w-64 h-screen fixed top-0 left-0 hidden lg:block bg-sub1 p-6 text-white overflow-y-auto z-40">
@@ -30,28 +32,31 @@ export default function Sidebar({ search, setSearch}) {
 
             {/* Main Menu */}
             <div className="text-xl font-bold mt-3 mb-4 text-white">Main Menu</div>
-            
-            <div className="flex items-center cursor-pointer ml-4 mb-4 hover:text-sub2 gap-2 transition-colors">
-                <MdOutlineDashboard />
-                <span>Dashboard</span>
-            </div>
 
             {/* Dropdown My Restaurant */}
-            <div
-                className="flex items-center justify-between ml-4 mb-2 cursor-pointer hover:text-sub2 transition-colors"
-                onClick={() => setIsOpen(prev => !prev)}>
-                <span className="flex items-center gap-2">My Restaurant</span>
-                <span>{isOpen ? <IoIosArrowDown /> : <IoIosArrowForward />}</span>
-            </div>
+            <nav className="flex flex-col gap-2">
+        <p className="text-xs text-gray-400 uppercase font-bold mb-2">
+          {role === 'admin' ? 'Admin Panel' : 'Menu Utama'}
+        </p>
 
-            {isOpen && (
-                <div className="ml-8 flex flex-col mb-4 gap-2 animate-fadeIn">
-                    <button className="text-left text-sm hover:text-sub2">Add Product</button>
-                    <button className="text-left text-sm hover:text-sub2">Manage Inventory</button>
-                </div>
-            )}
-
-            <button className="ml-4 block mb-6 hover:text-sub2">Analytics Reports</button>
+        {menus.map((item, index) => {
+          // Logika untuk menandai menu yang sedang aktif
+          const isActive = location.pathname === item.path;
+          
+          return (
+            <Link 
+              key={index} 
+              to={item.path}
+              className={`flex items-center gap-3 p-3 rounded-lg transition-all ${
+                isActive ? "bg-sub2 text-white" : "hover:bg-white/10 text-gray-300"
+              }`}
+            >
+              <span className="text-xl">{item.icon}</span>
+              <span className="font-medium">{item.label}</span>
+            </Link>
+          );
+        })}
+      </nav>
 
             {/* Others */}
             <div className="text-xl font-bold mb-4">Others</div>
