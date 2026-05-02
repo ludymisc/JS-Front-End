@@ -13,6 +13,7 @@ import AdminPanel from "./pages/adminPanel"
 import LoginPage from "./pages/loginAdmin"
 import Layout from "./pages/layoutTest"
 import Sidebar from "./components/sidebar"
+import ManageProduct from "./pages/layoutTest"
 
 export default function App() {
   const [search, setSearch] = useState("")
@@ -66,6 +67,7 @@ export default function App() {
             <Route path="/restaurant/:slug/:table_num/promos" element={<AllPromo search={search} />} />
             <Route path="/restaurant/:slug/:table_num/cart" element={<Cart />} />
             <Route path="/upload" element={<UploadTest />} />
+            <Route path="/layout" element={<Layout />}/>
             <Route
               path="/admin"
               element={
@@ -74,6 +76,7 @@ export default function App() {
                 </ProtectedRoute>
               }
             />
+            <Route path='/admin/manageProduct' element={<ManageProduct search={search} />} />
             <Route path='/login' element={<LoginPage />} />
             <Route path='/layout' search={search} setSearch={setSearch} element={<Layout />} />
           </Routes>

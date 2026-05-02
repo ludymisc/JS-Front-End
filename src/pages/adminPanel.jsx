@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react"
-import UploadModal from '../components/adminComponent/uploadModal'
 import { nukeProduct, fetchProducts } from "../service/adminPanelService"
 import Loading from "../components/loading"
 import { useContext } from "react"
@@ -7,7 +6,6 @@ import { AuthContext } from "../components/adminComponent/auth.context"
 import { supabase } from "../lib/supabaseClient"
 
 export default function AdminPanel() {
-  const [isOpen, setIsOpen] = useState(false)
   const [items, setItems] = useState([])
   const [search, setSearch] = useState("")
   const [loading, setLoading] = useState(true)
@@ -49,33 +47,19 @@ export default function AdminPanel() {
 
   return (
     <div style={{ padding: 20 }}>
-      <h1>Admin Panel</h1>
-
-
-      <button onClick={() => setIsOpen(true)}>
-        + Add Product
-      </button>
       {/* <button onClick={nukeTable} className="mx-4">
         NUKE!
       </button> */}
-      <button onClick={handleLogOut}>
+      {/* <button onClick={() => handleLogOut()}>
         Log Out
-      </button>
+      </button> */}
 
-      {isOpen && (
-        <UploadModal 
-          setIsOpen={setIsOpen} 
-          refreshProduct={fetchProduct}
-        />
-        )}
-
-      <hr />
 
       <h2>Product List</h2>
         {loading ? (
           <Loading text="fetching products..."/>
           ) : (
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-2 border border-black">
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
         {filteredProducts.map((item) => (
           <div
             key={item.id}
